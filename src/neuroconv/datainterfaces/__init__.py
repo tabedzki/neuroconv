@@ -37,6 +37,7 @@ from .ecephys.biocam.biocamdatainterface import BiocamRecordingInterface
 from .ecephys.alphaomega.alphaomegadatainterface import AlphaOmegaRecordingInterface
 from .ecephys.mearec.mearecdatainterface import MEArecRecordingInterface
 from .ecephys.mcsraw.mcsrawdatainterface import MCSRawRecordingInterface
+from .ecephys.mclust.mclustsortinginterface import MClustSortingInterface
 
 # Icephys
 from .icephys.abf.abfdatainterface import AbfInterface
@@ -86,6 +87,7 @@ interface_list = [
     OpenEphysBinaryRecordingInterface,
     OpenEphysRecordingInterface,
     OpenEphysSortingInterface,
+    MClustSortingInterface,
     PhySortingInterface,
     KiloSortSortingInterface,
     AxonaRecordingInterface,
