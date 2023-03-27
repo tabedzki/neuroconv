@@ -1,0 +1,8 @@
+FROM rclone/rclone:latest
+RUN $CONFIG_STREAM > ./rclone.conf
+RUN $RCLONE_COMMANNDS
+
+FROM ghcr.io/catalystneuro/neuroconv:latest
+ENV YAML_FILE /usr/local/bin/this_image_yaml_conversion.yml
+RUN $YAML_STREAM > $YAML_FILE
+RUN neuroconv $YAML_FILE

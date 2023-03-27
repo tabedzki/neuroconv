@@ -1,4 +1,3 @@
+LABEL org.opencontainers.image.source=https://github.com/catalystneuro/neuroconv
 FROM python:3.10
-ENV YAML_FILE /usr/local/bin/this_image_yaml_conversion.yml
-RUN $YAML_STREAM > $YAML_FILE
 RUN pip install neuroconv.[full]

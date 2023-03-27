@@ -1,0 +1,4 @@
+FROM ghcr.io/catalystneuro/neuroconv:latest
+RUN pip install boto3
+ADD custom_conversion_script.py /usr/local/bin/custom_conversion_script.py
+RUN python custom_conversion_script.py

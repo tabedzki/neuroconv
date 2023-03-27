@@ -1,2 +1,0 @@
-FROM rclone/rclone:latest
-ENTRYPOINT $CONFIG_STREAM > ./rclone.conf

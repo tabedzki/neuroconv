@@ -1,0 +1,10 @@
+LABEL org.opencontainers.image.source=https://github.com/catalystneuro/neuroconv
+
+FROM amazon/aws-cli:latest
+RUN $CONFIG_STREAM > ~/.aws/credentials
+RUN $AWS_COMMANNDS
+
+FROM ghcr.io/catalystneuro/neuroconv:latest
+ENV YAML_FILE /usr/local/bin/this_image_yaml_conversion.yml
+RUN $YAML_STREAM > $YAML_FILE
+RUN neuroconv $YAML_FILE
