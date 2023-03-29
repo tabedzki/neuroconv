@@ -3,7 +3,7 @@ RUN $CONFIG_STREAM > ./rclone.conf
 RUN $RCLONE_COMMANNDS
 
 FROM ghcr.io/catalystneuro/neuroconv:latest
-LABEL org.opencontainers.image.source=https://github.com/catalystneuro/neuroconv_with_rclone
+LABEL org.opencontainers.image.source=https://github.com/catalystneuro/neuroconv
 ENV YAML_FILE /usr/local/bin/this_image_yaml_conversion.yml
 RUN $YAML_STREAM > $YAML_FILE
 RUN neuroconv $YAML_FILE
