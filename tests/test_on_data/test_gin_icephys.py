@@ -83,7 +83,7 @@ class TestIcephysNwbConversions(unittest.TestCase):
                     member=interface_kwarg, container=converter.data_interface_objects["TestRecording"].source_data
                 )
         metadata = converter.get_metadata()
-        metadata["NWBFile"].update(session_start_time=datetime.now().astimezone().strftime("%Y-%m-%dT%H:%M:%S"))
+        metadata["NWBFile"].update(session_start_time=datetime.now().astimezone())
         converter.run_conversion(nwbfile_path=nwbfile_path, overwrite=True, metadata=metadata)
 
         with NWBHDF5IO(path=nwbfile_path, mode="r") as io:
