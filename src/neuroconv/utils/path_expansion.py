@@ -1,8 +1,8 @@
 import abc
 import os
 from collections import defaultdict
-from glob import glob
-from typing import Dict, List, Union
+from typing import Dict, List, Union, Tuple
+from pathlib import Path
 
 from parse import parse
 
@@ -33,6 +33,7 @@ def _unddict(d):
 
 class AbstractPathExpander(abc.ABC):
     def extract_metadata(self, folder, format_: str):
+        format_ = format_.replace("/", os.sep)  # our f-string uses '/' to communicate os-independent separators
         for filepath in self.list_directory(folder):
             result = parse(format_, filepath)
             if result:
@@ -94,7 +95,5 @@ class AbstractPathExpander(abc.ABC):
 
 
 class LocalPathExpander(AbstractPathExpander):
-    def list_directory(self, folder: Union[FilePathType, FolderPathType]):
-        folder_str = str(folder)
-        li = glob(os.path.join(folder_str, "**", "*"), recursive=True)
-        return (x[len(folder_str) + 1 :] for x in li)
+    def list_directory(self, folder: Union[FilePathType, FolderPathType]) -> Tuple[str]:
+        return (str(path.relative_to(folder)) for path in Path(folder).rglob("*"))
