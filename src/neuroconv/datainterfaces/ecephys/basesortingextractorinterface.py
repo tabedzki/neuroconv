@@ -4,10 +4,35 @@ import numpy as np
 from pynwb import NWBFile
 from pynwb.device import Device
 from pynwb.ecephys import ElectrodeGroup
+from spikeinterface import BaseRecording, BaseRecordingSegment
 
 from .baserecordingextractorinterface import BaseRecordingExtractorInterface
 from ...baseextractorinterface import BaseExtractorInterface
 from ...utils import OptionalFilePathType, get_base_schema, get_schema_from_hdmf_class
+
+
+class _TimestampsRecordingSegment(BaseRecordingSegment):
+    def __init__(self):
+        super().__init__(self, sampling_frequency=0.0)  # placeholder value
+
+    def get_num_samples(self):
+        return 0
+
+    def get_traces(self, **kwargs):
+        pass
+
+
+class _TimestampsRecording(BaseRecording):
+    """A RecordingExtractor that only has timestamps and is not meant to contain data."""
+
+    def __init__(self, timestamps: np.ndarray):
+        super().__init__(channel_ids=[], sampling_frequency=0.0, dtype="int8")  # placeholder values
+        recording_segment = _TimestampsRecordingSegment(cbuffer, sampling_frequency, load_sync_channel)
+        self.add_recording_segment(recording_segment)
+        self.set_times(times=timestamps)
+
+    def get_traces(self, **kwargs):
+        pass
 
 
 class BaseSortingExtractorInterface(BaseExtractorInterface):
@@ -86,7 +111,9 @@ class BaseSortingExtractorInterface(BaseExtractorInterface):
         if not self.sorting_extractor.has_recording():
             raise NotImplementedError(
                 "In order to align timestamps for a SortingInterface, it must have a recording "
-                "object attached to it! Please attach one by calling `.register_recording(recording_interface=...)`."
+                "object attached to it! "
+                "Please attach one by calling `.register_recording(recording_interface=...)` or "
+                "using `.align_timestamps(...)` to set a vector of timestamps."
             )
         if self._number_of_segments == 1:
             return self.sorting_extractor._recording.get_times()
@@ -114,17 +141,15 @@ class BaseSortingExtractorInterface(BaseExtractorInterface):
             If there is more than one segment in the sorting/recording pair, then
         """
         if not self.sorting_extractor.has_recording():
-            raise NotImplementedError(
-                "In order to align timestamps for a SortingInterface, it must have a recording "
-                "object attached to it! Please attach one by calling `.register_recording(recording_interface=...)`."
-            )
+            timestamps_recording_extractor = _TimestampsRecording(timestamps=aligned_timestamps)
+            self.sorting_extractor.register_recording(recording=timestamps_recording_extractor)
 
         if self._number_of_segments == 1:
             self.sorting_extractor._recording.set_times(times=aligned_timestamps)
         else:
             assert isinstance(
                 aligned_timestamps, list
-            ), "Recording has multiple segment! Please pass a list of timestamps to align each segment."
+            ), "Recording has multiple segments! Please pass a list of timestamps to align each segment."
             assert (
                 len(aligned_timestamps) == self._number_of_segments
             ), f"The number of timestamp vectors ({len(aligned_timestamps)}) does not match the number of segments ({self._number_of_segments})!"

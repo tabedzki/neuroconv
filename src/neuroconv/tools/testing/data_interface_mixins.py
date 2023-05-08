@@ -306,6 +306,8 @@ class SortingExtractorInterfaceTestMixin(DataInterfaceTestMixin):
             check_sortings_equal(SX1=sorting_renamed, SX2=nwb_sorting)
 
     def check_temporal_alignment(self):
+        self.check_manual_timestamps_no_recording()
+
         if self.associated_recording_cls is None:
             return
 
@@ -315,6 +317,12 @@ class SortingExtractorInterfaceTestMixin(DataInterfaceTestMixin):
         self.check_get_timestamps()
         self.check_align_starting_time_internal()
         self.check_align_starting_time_external()
+
+    def check_manual_timestamps_no_recording(self):
+        sampling_frequency = self.interface.sorting_extractor.get_sampling_frequency()
+        timestamps = np.arange(start=0.0, stop=len() * sampling_frequency, step=sampling_frequency)
+
+        # Set manually
 
     def check_align_starting_time_internal(self):
         fresh_interface = self.data_interface_cls(**self.test_kwargs)
