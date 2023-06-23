@@ -83,11 +83,8 @@ Synchronization is often received achieved through sending synchronization signa
 another. NeuroConv has some convenience methods for extracting times from TTL pulse signals. See the functions
 :py:func:`~.tools.signal_processing.get_rising_frames_from_ttl` and
 :py:func:`~.tools.signal_processing.get_falling_frames_from_ttl`. See also the convenience method
-:py:meth:`~.datainterfaces.ecephys.spikeglx.spikeglxnidqinterface.SpikeGLXNIDQInterface.get_event_times_from_ttl`
-of the
-:py:class:`~.datainterfaces.ecephys.spikeglx.spikeglxnidqinterface.SpikeGLXNIDQInterface` class. Custom approach
-will be required to use other types of synchronization signals.
-
+:py:meth:`.SpikeGLXNIDQInterface.get_event_times_from_ttl`. Custom approach will be required to use other types of
+synchronization signals.
 
 Temporal Alignment within NWBConverter
 --------------------------------------
