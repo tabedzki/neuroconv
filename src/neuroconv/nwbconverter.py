@@ -62,11 +62,13 @@ class NWBConverter:
         """Validate source_data against source_schema and initialize all data interfaces."""
         self.verbose = verbose
         self._validate_source_data(source_data=source_data, verbose=self.verbose)
-        self.data_interface_objects = {
-            name: data_interface(**source_data[name])
-            for name, data_interface in self.data_interface_classes.items()
-            if name in source_data
-        }
+        self.data_interface_objects = {}
+        for interface_name, data_interface in self.data_interface_classes.items():
+            if interface_name in source_data:
+                interface_inputs = source_data[interface_name]
+                if "es_key" in interface_inputs and interface_inputs["es_key"] is None:
+                    interface_inputs["es_key"] = f"{interface_name}_ElectricalSeries"
+                self.data_interface_objects[interface_name] = data_interface(**interface_inputs)
 
     def get_metadata_schema(self) -> dict:
         """Compile metadata schemas from each of the data interface objects."""

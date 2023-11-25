@@ -3,7 +3,6 @@ import unittest
 from datetime import datetime
 from pathlib import Path
 from platform import python_version as get_python_version
-from sys import platform
 from tempfile import mkdtemp
 from warnings import warn
 
@@ -169,3 +168,10 @@ class TestSortingInterface(unittest.TestCase):
             self.assertIsNone(nwbfile.units)
             self.assertIn("processed_units", ecephys.data_interfaces)
             self.assertEqual(ecephys["processed_units"].description, units_description)
+
+
+def test_es_key_collision():
+    class NWBConverterChild(NWBConverter):
+        data_interface_classes = dict(Interface1=MockRecordingInterface, Interface2=MockRecordingInterface)
+
+    NWBConverterChild(dict(Interface1=dict(), Interface2=dict())).get_metadata_schema()["properties"]["Ecephys"]["properties"].keys()
