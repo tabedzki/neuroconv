@@ -2,6 +2,7 @@
 from typing import Union
 
 from pynwb import NWBFile
+from hdmf.common import Data
 
 from ._configuration_models._hdf5_backend import HDF5BackendConfiguration
 from ._configuration_models._zarr_backend import ZarrBackendConfiguration
@@ -21,4 +22,9 @@ def configure_backend(
 
         # TODO: update buffer shape in iterator, if present
 
-        nwbfile_objects[object_id].set_data_io(dataset_name=dataset_name, data_io_class=data_io_class, **data_io_kwargs)
+        if isinstance(nwbfile_objects[object_id], Data):  # Only has one data field
+            nwbfile_objects[object_id].set_data_io(data_io_class=data_io_class, data_io_kwargs=data_io_kwargs)
+        else:
+            nwbfile_objects[object_id].set_data_io(
+                dataset_name=dataset_name, data_io_class=data_io_class, data_io_kwargs=data_io_kwargs
+            )
