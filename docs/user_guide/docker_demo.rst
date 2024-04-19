@@ -116,3 +116,47 @@ Voilà! If everything occurred successfully, you should see...
     Metadata is valid!
     conversion_options is valid!
     NWB file saved at /demo_neuroconv_docker/demo_output/phy_from_docker_yaml.nwb!
+
+
+Docker Rclone Transfer Demo
+---------------------------
+
+The following is an explicit demonstration of how to use the Docker-based NeuroConv Rclone transfer via the command line.
+
+It requires rclone to be separately installed on your system, from which we will fetch certain values from the configuration file.
+
+1. In your base directory (which this demo will refer to as ``/home/MyUser/``), make a new folder for the demo transfer named ``MyRcloneTransfer``.
+
+2. Choose if you want to install Rclone from PyPI or download it from the official website.
+
+2a. In Python:
+
+.. code::
+
+    pip install rclone
+
+2b. `Downloaded from the official website <https://rclone.org/downloads/>`_
+
+3. Setup rclone
+
+.. code::
+
+    rclone config
+
+and follow all instructions.
+
+.. note::
+
+    Note that our Rclone transfer image only currently supports Google Drive. We plan to add many more in the future - to request your preferred cloud storage service, please open an issue.
+
+4. Pull the latest NeuroConv Rclone transfer docker image from GitHub...
+
+.. code::
+
+    docker pull ghcr.io/catalystneuro/neuroconv:rclone_transfer
+
+5. Run the command line interface on the YAML file using the docker container (instead of a local installation of the Python package)...
+
+.. code::
+
+    docker run -t --volume /home/user/MyRcloneTransfer:/MyRcloneTransfer ghcr.io/catalystneuro/neuroconv:rclone_transfer --env DRIVE_NAME="<YOUR DRIVE NAME>" --env TOKEN=""
